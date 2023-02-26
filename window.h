@@ -23,6 +23,3 @@ private:
 };
 
 #endif //UNTITLED_WINDOW_H
-
-void url_encode(char *dest, const char *origin, std::map<const char *, const char *> params);
-size_t ret_recv_data(void *ptr, size_t size, size_t nmemb, void *stream);

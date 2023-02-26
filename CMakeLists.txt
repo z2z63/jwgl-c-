@@ -8,7 +8,6 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 
-
 find_package(Qt5 COMPONENTS
         Core
         Gui
@@ -17,10 +16,17 @@ find_package(Qt5 COMPONENTS
         REQUIRED)
 
 link_directories(
-#        /user/lib
+        #        /user/lib
 )
 
-add_executable(untitled window.cpp window.h main.cpp ui_window.h)
+add_executable(untitled
+        window.cpp
+        window.h
+        main.cpp
+        ui_window.h
+        session.h
+        session.cpp
+        session.cpp)
 add_executable(test test.cpp)
 target_link_libraries(untitled
         Qt5::Core
@@ -31,5 +37,5 @@ target_link_libraries(untitled
         )
 target_link_libraries(test
         libcurl.so.4.8.0
-)
+        )
 
