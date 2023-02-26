@@ -26,7 +26,9 @@ add_executable(untitled
         ui_window.h
         session.h
         session.cpp
-        session.cpp)
+        holdTcp.h
+        holdTcp.cpp
+        )
 add_executable(test test.cpp)
 target_link_libraries(untitled
         Qt5::Core
