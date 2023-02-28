@@ -37,8 +37,9 @@ namespace WebSession {
 
         friend Response::Response(Session &session);
 
-    private:
+    public:
         CURL *curl;
+    private:
         string text_buffer{};
 
         string url_with_params{};

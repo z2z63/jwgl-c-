@@ -3,9 +3,14 @@
 #include <boost/regex.hpp>
 #include <iostream>
 #include "session.h"
+#include "holdTcp.h"
+#include <QString>
 
 Window::Window(QWidget *parent) : QMainWindow(parent) {
     ui.setupUi(this);
+    connect(&thread, &QThread::finished, &worker, &QObject::deleteLater);
+    connect(this, &Window::operate, &worker, &holdTcp::HoldTcpAndLogin);
+    connect(&worker, &holdTcp::resultReady, this, &Window::handleResults);
     login();
 }
 
@@ -53,7 +58,27 @@ void Window::showQrcode() {
     session.get(url3, params3).writeFile("qrcode.png");
     QPixmap img("qrcode.png");
     ui.label->setPixmap(img.scaled(ui.label->width(), ui.label->height()));
+    worker.moveToThread(&thread);
+    thread.start();
+    emit operate(string("2"));
 
 }
+
+void Window::selectCourse() {
+
+}
+
+Window::~Window() {
+    thread.quit();
+    thread.wait();
+
+
+}
+
+void Window::handleResults(CURL *curl, const string sid, const string appid, const string rand_token) {
+
+}
+
+
 
 

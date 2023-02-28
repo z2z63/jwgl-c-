@@ -1,13 +1,42 @@
-#include <boost/regex.hpp>
+#include <QThread>
 #include <iostream>
-int main() {
-    boost::regex reg(R"~((.*?)31)~");
-    boost::cmatch m;
-    const char* text = "Note that I'm 31 years old, not 32.";
-    if(boost::regex_search(text,m, reg)) {
-        if (m[1].matched)
-            std::cout << "(.*?) matched: " << m[1].str() << '\n';
-        if (m[2].matched)
-            std::cout << "Found the age: " << m[2] << '\n';
+using namespace std;
+class Worker : public QObject
+{
+Q_OBJECT
+
+public slots:
+    void doWork(const QString &parameter) {
+        QString result;
+        cout << "adadasdas" << endl;
+        /* ... here is the expensive or blocking operation ... */
+        emit resultReady(result);
     }
+
+signals:
+    void resultReady(const QString &result);
+};
+
+class Controller : public QObject
+{
+Q_OBJECT
+    QThread workerThread;
+public:
+    Controller() {
+        Worker *worker = new Worker;
+        worker->moveToThread(&workerThread);
+        connect(&workerThread, &QThread::finished, worker, &QObject::deleteLater);
+        connect(this, &Controller::operate, worker, &Worker::doWork);
+        connect(worker, &Worker::resultReady, this, &Controller::handleResults);
+        workerThread.start();
+    }
+    ~Controller() {
+        workerThread.quit();
+        workerThread.wait();
+    }
+public slots:
+    void handleResults(const QString &);
+signals:
+    void operate(const QString &);
+};
 }

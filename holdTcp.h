@@ -1,12 +1,22 @@
 #ifndef UNTITLED_HOLDTCP_H
 #define UNTITLED_HOLDTCP_H
+
 #include "session.h"
 #include <QThread>
 #include <curl/curl.h>
-class holdTcp {
-    Q_OBJECT
-public:
-    void HoldTcpAndLogin(CURL* curl, string appid, string rand_token, string sid);
+#include <QString>
+#include <fstream>
+
+class holdTcp : public QObject {
+Q_OBJECT
+public slots:
+
+    void HoldTcpAndLogin();
+
+signals:
+
+    void resultReady(CURL *curl, const string sid, const string appid, const string rand_token);
+
 };
 
 

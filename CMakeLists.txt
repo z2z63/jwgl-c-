@@ -38,6 +38,10 @@ target_link_libraries(untitled
         libcurl.so.4.8.0
         )
 target_link_libraries(test
+        Qt5::Core
+        Qt5::Gui
+        Qt5::Widgets
+        Qt5::WebEngineWidgets
         libcurl.so.4.8.0
         )
 
