@@ -4,13 +4,16 @@
 #include <iostream>
 #include "session.h"
 #include "holdTcp.h"
-#include <QString>
 
 Window::Window(QWidget *parent) : QMainWindow(parent) {
+    worker = new holdTcp();
     ui.setupUi(this);
-    connect(&thread, &QThread::finished, &worker, &QObject::deleteLater);
-    connect(this, &Window::operate, &worker, &holdTcp::HoldTcpAndLogin);
-    connect(&worker, &holdTcp::resultReady, this, &Window::handleResults);
+    ofstream f;
+    f.open("cookies.txt", ofstream::out|std::ofstream::trunc);
+    f.close();
+    connect(this, &Window::operate, worker, &holdTcp::HoldTcpAndLogin);
+    connect(&thread, &QThread::finished, worker, &QObject::deleteLater);
+    connect(worker, &holdTcp::resultReady, this, &Window::selectCourse);
     login();
 }
 
@@ -22,7 +25,7 @@ void Window::showQrcode() {
     string url1 = "https://jwgl.ustb.edu.cn/glht/Logon.do?method=randToken";
     string url2 = "https://sis.ustb.edu.cn/connect/qrpage";
     string url3 = "https://sis.ustb.edu.cn/connect/qrimg";
-    auto session = WebSession::Session();
+    WebSession::Session session;
     string *resp_text = session.get(url1).text();
     cout << *resp_text << endl;
     boost::regex reg1((R"~((?<={"rand_token":")(.*?)(?="))~"), boost::regex::JavaScript);
@@ -30,10 +33,10 @@ void Window::showQrcode() {
     boost::smatch rand_token_matches;
     boost::smatch appid_matches;
     if (!boost::regex_search(*resp_text, rand_token_matches, reg1)) {
-        throw runtime_error("regular expression matched None : rand_token");
+        throw runtime_error("regular expression matched None : rand_token\n"+ *resp_text);
     }
     if (!boost::regex_search(*resp_text, appid_matches, reg2)) {
-        throw runtime_error("regular expression matched None : appid");
+        throw runtime_error("regular expression matched None : appid\n"+ *resp_text);
     }
     string appid = appid_matches.str();
     string rand_token = rand_token_matches.str();
@@ -56,28 +59,24 @@ void Window::showQrcode() {
     };
     cout << sid << endl;
     session.get(url3, params3).writeFile("qrcode.png");
+
     QPixmap img("qrcode.png");
     ui.label->setPixmap(img.scaled(ui.label->width(), ui.label->height()));
-    worker.moveToThread(&thread);
+    worker->moveToThread(&thread);
     thread.start();
-    emit operate(string("2"));
+    emit operate(&session, sid, appid, rand_token);
 
 }
 
 void Window::selectCourse() {
-
+    WebSession::Session session;
 }
 
 Window::~Window() {
     thread.quit();
     thread.wait();
-
-
 }
 
-void Window::handleResults(CURL *curl, const string sid, const string appid, const string rand_token) {
-
-}
 
 
 

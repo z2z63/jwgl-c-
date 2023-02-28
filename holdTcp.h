@@ -11,11 +11,11 @@ class holdTcp : public QObject {
 Q_OBJECT
 public slots:
 
-    void HoldTcpAndLogin();
+    void HoldTcpAndLogin(WebSession::Session *session, const string sid, const string appid, const string rand_token);
 
 signals:
 
-    void resultReady(CURL *curl, const string sid, const string appid, const string rand_token);
+    void resultReady();
 
 };
 

@@ -22,20 +22,18 @@ public:
 
     void login();
 
-    void selectCourse();
-
 signals:
 
-    void operate(const string &);
+    void operate(WebSession::Session *session, const string sid, const string appid, const string rand_token);
 
 public slots:
 
-    void handleResults(CURL *curl, const string sid, const string appid, const string rand_token);
+    void selectCourse();
 
 private:
     Ui::MainWindow ui{};
     QThread thread{};
-    holdTcp worker{};
+    holdTcp *worker;
 };
 
 #endif //UNTITLED_WINDOW_H

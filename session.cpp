@@ -4,7 +4,8 @@ using namespace std;
 
 WebSession::Session::Session() {
     curl = curl_easy_init();
-    curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "");
+    curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "cookies.txt");
+    curl_easy_setopt(curl, CURLOPT_COOKIEJAR, "cookies.txt");
 }
 
 WebSession::Session::~Session() {
@@ -70,8 +71,8 @@ string *WebSession::Response::text() {
     curl_easy_setopt(curl, CURLOPT_URL, url_with_params->c_str());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WebSession::ret_recv_text);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, buffer_ptr);
-    if(curl_easy_perform(curl)){
-        throw runtime_error("NetworkError url: " + *url_with_params);
+    if(CURLcode code = curl_easy_perform(curl)){
+        throw runtime_error("NetworkError url: " + *url_with_params + curl_easy_strerror(code));
     }
     return buffer_ptr;
 }
