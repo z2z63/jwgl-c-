@@ -22,9 +22,11 @@ public:
 
     void login();
 
+    bool testCookie();
+
 signals:
 
-    void operate(WebSession::Session *session, const string sid, const string appid, const string rand_token);
+    void operate(const string sid, const string appid, const string rand_token);
 
 public slots:
 

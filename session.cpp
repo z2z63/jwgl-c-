@@ -6,6 +6,7 @@ WebSession::Session::Session() {
     curl = curl_easy_init();
     curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "cookies.txt");
     curl_easy_setopt(curl, CURLOPT_COOKIEJAR, "cookies.txt");
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
 }
 
 WebSession::Session::~Session() {
@@ -52,6 +53,10 @@ WebSession::Response::Response(WebSession::Session &session) {
     url_with_params = &session.url_with_params;
 }
 
+void WebSession::Session::saveCookies() const {
+    curl_easy_setopt(curl, CURLOPT_COOKIELIST, "FLUSH");
+}
+
 void WebSession::Response::writeFile(const string& fileName) {
     FILE *fp = fopen(fileName.c_str(), "w");
     if (fp == nullptr) {
@@ -71,8 +76,11 @@ string *WebSession::Response::text() {
     curl_easy_setopt(curl, CURLOPT_URL, url_with_params->c_str());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WebSession::ret_recv_text);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, buffer_ptr);
-    if(CURLcode code = curl_easy_perform(curl)){
+    CURLcode code = curl_easy_perform(curl);
+    if(code){
         throw runtime_error("NetworkError url: " + *url_with_params + curl_easy_strerror(code));
     }
+//    cout << *url_with_params << endl;
+//    cout << "Code: " << curl_easy_strerror(code);
     return buffer_ptr;
 }

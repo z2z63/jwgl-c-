@@ -11,7 +11,7 @@ class holdTcp : public QObject {
 Q_OBJECT
 public slots:
 
-    void HoldTcpAndLogin(WebSession::Session *session, const string sid, const string appid, const string rand_token);
+    void HoldTcpAndLogin(const string sid, const string appid, const string rand_token);
 
 signals:
 

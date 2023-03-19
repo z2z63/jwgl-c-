@@ -15,9 +15,6 @@ find_package(Qt5 COMPONENTS
         WebEngineWidgets
         REQUIRED)
 
-link_directories(
-        #        /user/lib
-)
 
 add_executable(untitled
         window.cpp
@@ -29,7 +26,7 @@ add_executable(untitled
         holdTcp.h
         holdTcp.cpp
         )
-add_executable(test test.cpp)
+
 target_link_libraries(untitled
         Qt5::Core
         Qt5::Gui
@@ -37,11 +34,6 @@ target_link_libraries(untitled
         Qt5::WebEngineWidgets
         libcurl.so.4.8.0
         )
-target_link_libraries(test
-        Qt5::Core
-        Qt5::Gui
-        Qt5::Widgets
-        Qt5::WebEngineWidgets
-        libcurl.so.4.8.0
-        )
+
+
 

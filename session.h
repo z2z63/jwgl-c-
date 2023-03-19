@@ -35,6 +35,8 @@ namespace WebSession {
 
         Response get(string &url, const map<const string, const string> &params = {});
 
+        void saveCookies() const;
+
         friend Response::Response(Session &session);
 
     public:
