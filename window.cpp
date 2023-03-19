@@ -4,9 +4,9 @@
 #include <iostream>
 #include "session.h"
 #include "holdTcp.h"
-#include "libxml2/libxml/xpath.h"
-#include "libxml2/libxml/parser.h"
-#include "libxml2/libxml/tree.h"
+//#include "libxml2/libxml/xpath.h"
+//#include "libxml2/libxml/parser.h"
+//#include "libxml2/libxml/tree.h"
 
 Window::Window(QWidget *parent) : QMainWindow(parent) {
     worker = new holdTcp();
@@ -101,10 +101,10 @@ void Window::selectCourse() {
     string url3 = "https://jwgl.ustb.edu.cn" + href_matches.str();
     resp_text = session.get(url3).text();
     cout << *resp_text << endl;
-    xmlDocPtr doc = xmlParseDoc(BAD_CAST resp_text->c_str());
-    auto *xpath = BAD_CAST "//table/tr";
-    xmlXPathObjectPtr result = xmlXPathEvalExpression(xpath, xmlXPathNewContext(doc));
-    cout << result << endl;
+//    xmlDocPtr doc = xmlParseDoc(BAD_CAST resp_text->c_str());
+//    auto *xpath = BAD_CAST "//table/tr";
+//    xmlXPathObjectPtr result = xmlXPathEvalExpression(xpath, xmlXPathNewContext(doc));
+//    cout << result << endl;
 
 }
 
